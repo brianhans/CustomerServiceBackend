@@ -14,9 +14,10 @@ module.exports = function attachHandlers(router, passport) {
 };
 
 function incomingMessage(req, res, next) {
-	var text = req.body['stripped-text'];
-	var from = req.body.From;
-	var to = req.body.To;
+	var text = req.body.plain;
+	var from = req.body.envelope.from;
+	var to = req.body.envelope.to;
+
 
 	Chat.findOne({
 		'chatUser.email': from
@@ -48,11 +49,7 @@ function incomingMessage(req, res, next) {
 			var chatUser = new ChatUser();
 			chatUser.email = from;
 
-			if (name) {
-				chatUser.name = name;
-			} else {
-				chatUser.name = from;
-			}
+			chatUser.name = from;
 
 			chat.chatUser = chatUser;
 		}
