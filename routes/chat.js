@@ -1,5 +1,6 @@
 var mongoose = require('mongoose');
 var nexmo = require('../helpers/nexmoClient');
+var mailgun = require('../helpers/mailgun');
 var Constants = require('../constants');
 var Chat = mongoose.model('chat');
 var User = mongoose.model('user');
@@ -114,7 +115,12 @@ function sendSms(chatId, message) {
 }
 
 function sendEmail(chatId, message) {
+	return Chat.findById(chatId).populate('owner').then(chat => {
+		var from = chat.owner.email;
+		var to = chat.chatUser.email;
 
+		return mailgun.sendMessage(to, from, message);
+	});
 }
 
 
