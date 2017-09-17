@@ -32,6 +32,12 @@ function createServer() {
 		console.log('now listening on ' + port);
 	});
 
+	var httpServer = require('http').Server(server);
+	var io = require('socket.io')(httpServer);
+	console.log(httpServer.port);
+
+	require('./services/socket')(io);
+
 	return server;
 }
 
@@ -58,4 +64,4 @@ function normalizePort(val) {
 	return false;
 }
 
-createServer();
+module.exports = createServer();

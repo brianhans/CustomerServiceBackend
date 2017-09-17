@@ -1,6 +1,10 @@
 var mongoose = require('mongoose');
 var nexmo = require('../helpers/nexmoClient');
 var mailgun = require('../helpers/mailgun');
+var io = require('socket.io-emitter')({
+	host: 'localhost',
+	port: 6379
+});
 var Constants = require('../constants');
 var Chat = mongoose.model('chat');
 var User = mongoose.model('user');
