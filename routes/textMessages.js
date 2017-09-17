@@ -6,9 +6,9 @@ var User = mongoose.model('user');
 module.exports = function attachHandlers(router, passport) {
 
 	// get requests
-	router.get('/incomingMessage', incomingMessage);
 
 	// post requests
+	router.post('/incomingMessage', incomingMessage);
 };
 
 function incomingMessage(req, res, next) {
@@ -16,9 +16,12 @@ function incomingMessage(req, res, next) {
 	const from = req.body.msisdn;
 	const to = req.body.to;
 
+	console.log(type);
+	console.log(type != 'text');
 	if (type != 'text') {
 		return res.status(200).send();
 	}
+
 
 	Chat.findOne({
 		'chatUser.phoneNumber': from
