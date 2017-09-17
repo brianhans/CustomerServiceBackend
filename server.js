@@ -8,12 +8,13 @@ function createServer() {
 	var server = express();
 
 	// specify middleware
-	server.use(bodyParser);
+	server.use(bodyParser.urlencoded());
+	server.use(bodyParser.json());
 	server.use(handleError);
 	server.use(passport.initialize());
 
 	// attach router handlers
-	require('./routes/index').attachHandlers(server, passport);
+	require('./routes').attachHandlers(server, passport);
 
 
 	//Get port from environment and store in Express.
