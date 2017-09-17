@@ -20,6 +20,10 @@ function createServer() {
 		return next();
 	});
 
+	//Get port from environment and store in Express.
+	var port = normalizePort(process.env.PORT || '3000');
+	server.set('port', port);
+
 	//Start socket
 	var httpServer = require('http').Server(server);
 	var io = require('socket.io')(httpServer);
@@ -29,11 +33,6 @@ function createServer() {
 
 	// attach router handlers
 	require('./routes').attachHandlers(server, passport, io);
-
-
-	//Get port from environment and store in Express.
-	var port = normalizePort(process.env.PORT || '3000');
-	server.set('port', port);
 
 	server.listen(port, function() {
 		console.log('now listening on ' + port);
