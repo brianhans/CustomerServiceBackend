@@ -71,7 +71,10 @@ function incomingMessage(req, res, next) {
 
 		return chat.save();
 	}).then((chat) => {
-		console.log('newMessage' + chat.id);
+		io.emit('newMessage', {
+			message: message.toObject(),
+			chat: chat
+		});
 		io.emit('newMessage' + chat.id, {
 			message: message.toObject()
 		});

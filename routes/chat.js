@@ -65,7 +65,10 @@ function addMessage(req, res, next) {
 			lastMessage: message.text
 		}
 	}).then(chat => {
-		console.log('newMessage' + chat.id);
+		io.emit('newMessage', {
+			message: message.toObject(),
+			chat: chat
+		});
 		io.emit('newMessage' + chat.id, {
 			message: message.toObject()
 		});
