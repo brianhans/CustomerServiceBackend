@@ -12,6 +12,11 @@ function createServer() {
 	server.use(bodyParser.json());
 	server.use(handleError);
 	server.use(passport.initialize());
+	server.use(function(req, res, next) {
+		res.setHeader("Access-Control-Allow-Origin", "*");
+		res.setHeader("Content-Type", "application/json");
+		return next();
+	});
 
 	// attach router handlers
 	require('./routes').attachHandlers(server, passport);
