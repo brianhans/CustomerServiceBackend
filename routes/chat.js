@@ -106,7 +106,7 @@ function readMessage(req, res, next) {
 
 function sendSms(chatId, message) {
 	return Chat.findById(chatId).populate('owner').then(chat => {
-		var from = chat.owner.phoneNUmber;
+		var from = chat.owner.phoneNumber;
 		var to = chat.chatUser.phoneNumber;
 
 		return nexmo.message.sendSms(from, to, message);
