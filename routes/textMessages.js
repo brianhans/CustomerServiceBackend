@@ -71,7 +71,7 @@ function incomingMessage(req, res, next) {
 
 		return chat.save();
 	}).then((chat) => {
-		io.to(chat.id).emit('newMessage', {
+		io.emit('newMessage' + chat.id, {
 			message: message.toObject()
 		});
 		return res.status(200).send();
