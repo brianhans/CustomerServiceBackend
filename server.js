@@ -20,8 +20,15 @@ function createServer() {
 		return next();
 	});
 
+	//Start socket
+	var httpServer = require('http').Server(server);
+	var io = require('socket.io')(httpServer);
+	console.log(httpServer.port);
+
+	require('./services/socket')(io);
+
 	// attach router handlers
-	require('./routes').attachHandlers(server, passport);
+	require('./routes').attachHandlers(server, passport, io);
 
 
 	//Get port from environment and store in Express.
@@ -31,12 +38,6 @@ function createServer() {
 	server.listen(port, function() {
 		console.log('now listening on ' + port);
 	});
-
-	var httpServer = require('http').Server(server);
-	var io = require('socket.io')(httpServer);
-	console.log(httpServer.port);
-
-	require('./services/socket')(io);
 
 	return server;
 }

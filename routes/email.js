@@ -4,9 +4,10 @@ var Chat = mongoose.model('chat');
 var Message = mongoose.model('message');
 var User = mongoose.model('user');
 var ChatUser = mongoose.model('chatUser');
+var io;
 
-module.exports = function attachHandlers(router, passport) {
-
+module.exports = function attachHandlers(router, passport, socket) {
+	io = socket;
 	// get requests
 
 	// post requests
@@ -17,7 +18,7 @@ function incomingMessage(req, res, next) {
 	var text = req.body.plain;
 	var from = req.body.envelope.from;
 	var to = req.body.envelope.to;
-
+	var message = new Message();
 
 	Chat.findOne({
 		'chatUser.email': from
@@ -32,7 +33,6 @@ function incomingMessage(req, res, next) {
 		}
 	}).then(chat => {
 		//Create message object
-		var message = new Message();
 		message.fromUser = true;
 		message.text = text;
 		message.save();
@@ -54,9 +54,11 @@ function incomingMessage(req, res, next) {
 			chat.chatUser = chatUser;
 		}
 
-		console.log(chat);
 		return chat.save();
-	}).then(() => {
+	}).then((chat) => {
+		io.to(chat.id).emit('newMessage', {
+			message: message.toObject()
+		});
 		return res.status(200).send();
 	}).catch(error => {
 		next(error);

@@ -4,13 +4,15 @@ var Chat = mongoose.model('chat');
 var Message = mongoose.model('message');
 var User = mongoose.model('user');
 var ChatUser = mongoose.model('chatUser');
+var io;
 
 var phoneNumberNames = {
 	'19545361522': 'Brian Hans',
 	'16505750337': 'Nick Swift'
 }
 
-module.exports = function attachHandlers(router, passport) {
+module.exports = function attachHandlers(router, passport, socket) {
+	io = socket;
 
 	// get requests
 
@@ -22,6 +24,8 @@ function incomingMessage(req, res, next) {
 	const type = req.body.type;
 	const from = req.body.msisdn;
 	const to = req.body.to;
+	var message = new Message();
+
 
 	if (type != 'text') {
 		return res.status(200).send();
@@ -39,7 +43,6 @@ function incomingMessage(req, res, next) {
 		}
 	}).then(chat => {
 		//Create message object
-		var message = new Message();
 		message.fromUser = true;
 		message.text = req.body.text;
 		message.save();
@@ -67,7 +70,10 @@ function incomingMessage(req, res, next) {
 		}
 
 		return chat.save();
-	}).then(() => {
+	}).then((chat) => {
+		io.to(chat.id).emit('newMessage', {
+			message: message.toObject()
+		});
 		return res.status(200).send();
 	}).catch(error => {
 		next(error);

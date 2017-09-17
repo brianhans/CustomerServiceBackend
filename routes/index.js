@@ -1,7 +1,7 @@
-exports.attachHandlers = function attachHandlers(server, passport) {
+exports.attachHandlers = function attachHandlers(server, passport, io) {
 
-	require('./chat')(server, passport);
+	require('./chat')(server, passport, io);
 	require('./auth')(server, passport);
-	require('./textMessages')(server, passport);
-	require('./email')(server, passport);
+	require('./textMessages')(server, passport, io);
+	require('./email')(server, passport, io);
 };

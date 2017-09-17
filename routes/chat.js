@@ -1,16 +1,14 @@
 var mongoose = require('mongoose');
 var nexmo = require('../helpers/nexmoClient');
 var mailgun = require('../helpers/mailgun');
-var io = require('socket.io-emitter')({
-	host: 'localhost',
-	port: 6379
-});
 var Constants = require('../constants');
 var Chat = mongoose.model('chat');
 var User = mongoose.model('user');
 var Message = mongoose.model('message');
+var io;
 
-module.exports = function attachHandlers(router, passport) {
+module.exports = function attachHandlers(router, passport, socket) {
+	io = socket;
 
 	// get requests
 	router.get('/chat', listChats);
@@ -67,6 +65,10 @@ function addMessage(req, res, next) {
 			lastMessage: message.text
 		}
 	}).then(chat => {
+		io.to(chat.id).emit('newMessage', {
+			message: message.toObject()
+		});
+
 		if (!fromUser && chat.type == Constants.TEXT) {
 			return sendSms(id, text);
 		} else if (!fromUser && chat.type == Constants.EMAIL) {
@@ -86,6 +88,7 @@ function addMessage(req, res, next) {
 function readMessage(req, res, next) {
 	var id = req.params.id;
 	var fromUser = req.body.fromUser;
+	var chatId = req.body.chatId;
 	var data;
 
 	if (fromUser) {
@@ -103,6 +106,10 @@ function readMessage(req, res, next) {
 	}, {
 		$set: data
 	}).then(message => {
+		io.to(chat.id).emit('read', {
+			messageId: id,
+			fromUser: fromUser
+		});
 		res.status(200).send(JSON.stringify(message.toObject()));
 	}).catch(err => {
 		next(err);
