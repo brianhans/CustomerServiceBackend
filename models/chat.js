@@ -16,6 +16,7 @@ var chatSchema = new Schema({
 		ref: 'user'
 	},
 	chatUser: chatUserSchema,
+	lastMessage: String,
 	messages: [{
 		type: Schema.Types.ObjectId,
 		ref: 'message'

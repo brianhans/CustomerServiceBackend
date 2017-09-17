@@ -40,6 +40,7 @@ function incomingMessage(req, res, next) {
 		message.text = req.body.text;
 		message.save();
 
+		console.log(chat);
 		if (chat.messages === undefined) {
 			chat.message = [message]
 		} else {
