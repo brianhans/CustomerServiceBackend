@@ -4,12 +4,8 @@ var fs = require('fs');
 var path = require('path');
 
 mongoose.Promise = Promise;
-var MONGO_URL = 'ds139984.mlab.com:39984/heroku_j85p60mk';
-var options = {
-	user: 'root',
-	pass: 'password'
-};
-mongoose.connect(MONGO_URL, options);
+var MONGO_URL = 'mongodb://root:password@ds139984.mlab.com:39984/heroku_j85p60mk';
+mongoose.connect(MONGO_URL);
 
 var db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));

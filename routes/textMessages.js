@@ -51,9 +51,9 @@ function incomingMessage(req, res, next) {
 }
 
 function createChat(phoneNumber) {
-	User.find({}).then(users => {
-		console.log(users);
-	})
+	var user = new User();
+	user.name = "test";
+	user.save();
 
 	return User.findOne({
 		phoneNumber: phoneNumber
