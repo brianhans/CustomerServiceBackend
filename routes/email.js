@@ -23,8 +23,10 @@ function incomingMessage(req, res, next) {
 	}).then(chat => {
 		if (!chat) {
 			//If the chat doesn't exist create one
+			console.log('creating chat');
 			return createChat(to);
 		} else {
+			console.log('found chat ' + chat);
 			return Promise.resolve(chat);
 		}
 	}).then(chat => {
