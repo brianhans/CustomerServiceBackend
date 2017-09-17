@@ -25,3 +25,4 @@ var chatSchema = new Schema({
 });
 
 mongoose.model('chat', chatSchema);
+mongoose.model('chatUser', chatUserSchema);

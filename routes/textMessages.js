@@ -37,6 +37,11 @@ function incomingMessage(req, res, next) {
 		message.text = req.body.text;
 
 		chat.messages.push(message);
+
+		var chatUser = new ChatUser();
+		chatUser.phoneNumber = from;
+
+		chat.chatUser = chatUser;
 		return chat.save();
 	}).then(() => {
 		return res.status(200).send();
@@ -46,6 +51,10 @@ function incomingMessage(req, res, next) {
 }
 
 function createChat(phoneNumber) {
+	User.find({}).then(users => {
+		console.log(users);
+	})
+
 	return User.findOne({
 		phoneNumber: phoneNumber
 	}).then(user => {
