@@ -5,16 +5,16 @@ var User = mongoose.model('user');
 module.exports = function attachHandlers(router, passport) {
 
 	// get requests
-	router.get('/chat', passport.authenticate('local-login'), listChats);
+	router.get('/chat', listChats);
 
 	// post requests
-	router.post('/chat', passport.authenticate('local-login'), createChat);
+	router.post('/chat', createChat);
 };
 
 function listChats(req, res, next) {
-	Chat.find({
-		owner: req.user
-	}).populate('chatUser').lean().exec(err, chats => {
+	Chat.findOne({
+
+	}).populate('chatUser').lean().exec((err, chats) => {
 		if (err) {
 			return next(err);
 		}

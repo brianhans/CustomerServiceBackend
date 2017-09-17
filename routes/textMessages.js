@@ -2,6 +2,7 @@ var mongoose = require('mongoose');
 var Chat = mongoose.model('chat');
 var Message = mongoose.model('message');
 var User = mongoose.model('user');
+var ChatUser = mongoose.model('chatUser');
 
 module.exports = function attachHandlers(router, passport) {
 
@@ -23,6 +24,8 @@ function incomingMessage(req, res, next) {
 
 	Chat.findOne({
 		'chatUser.phoneNumber': from
+	}, {
+		'chatUser.$': 1
 	}).then(chat => {
 		if (!chat) {
 			//If the chat doesn't exist create one
@@ -56,12 +59,12 @@ function createChat(phoneNumber) {
 	}).then(user => {
 		if (!user) {
 			const error = new Error('No use owns phone number: ' + phoneNumber);
-			throw error;
+			return Promise.reject(error);
 		}
 
 		var chat = new Chat();
 		chat.owner = user;
 		chat.messages = [];
-		resolve(chat);
+		return Promise.resolve(chat);
 	});
 }
