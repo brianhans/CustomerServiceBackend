@@ -1,4 +1,6 @@
 var mongoose = require('mongoose');
+var nexmo = require('../helpers/nexmoClient');
+var Constants = require('../constants');
 var Chat = mongoose.model('chat');
 var User = mongoose.model('user');
 var Message = mongoose.model('message');
@@ -12,6 +14,7 @@ module.exports = function attachHandlers(router, passport) {
 	// post requests
 	router.post('/chat', createChat);
 	router.post('/chat/:id/messages', addMessage);
+	router.post('/messages/:id/read', readMessage);
 };
 
 function listChats(req, res, next) {
@@ -55,6 +58,12 @@ function addMessage(req, res, next) {
 		$push: {
 			messages: message
 		}
+	}).then(chat => {
+		if (!fromUser && chat.type == Constants.TEXT) {
+			return sendSms(id, text);
+		} else {
+			return Promise.resolve();
+		}
 	});
 
 	Promise.all([chatUpdate, messageSave]).then(() => {
@@ -63,6 +72,32 @@ function addMessage(req, res, next) {
 		next(err);
 	});
 }
+
+function readMessage(req, res, next) {
+	var id = req.params.id;
+
+	Message.findOneAndUpdate({
+		_id: id
+	}, {
+		$set: {
+			read: true
+		}
+	}).then(message => {
+		res.status(200).send(JSON.stringify(message.toObject()));
+	}).catch(err => {
+		next(err);
+	});
+}
+
+function sendSms(chatId, message) {
+	return Chat.findById(chatId).populate('owner').then(chat => {
+		var from = chat.owner.phoneNUmber;
+		var to = chat.chatUser.phoneNumber;
+
+		return nexmoCLient.message.sendSms(from, to, message);
+	})
+}
+
 
 function createChat(req, res, next) {
 

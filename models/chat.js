@@ -4,7 +4,6 @@ var Schema = mongoose.Schema;
 var chatUserSchema = new Schema({
 	name: String,
 	profilePicture: String,
-	type: String,
 	phoneNumber: String,
 	id: String,
 	email: String
@@ -17,6 +16,7 @@ var chatSchema = new Schema({
 	},
 	chatUser: chatUserSchema,
 	lastMessage: String,
+	type: String,
 	messages: [{
 		type: Schema.Types.ObjectId,
 		ref: 'message'

@@ -3,7 +3,8 @@ var Schema = mongoose.Schema;
 
 var messageSchema = new Schema({
 	fromUser: Boolean,
-	text: String
+	text: String,
+	read: Boolean
 }, {
 	timestamps: true
 });

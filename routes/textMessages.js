@@ -1,8 +1,14 @@
 var mongoose = require('mongoose');
+var Constants = require('../constants');
 var Chat = mongoose.model('chat');
 var Message = mongoose.model('message');
 var User = mongoose.model('user');
 var ChatUser = mongoose.model('chatUser');
+
+var phoneNumberNames = {
+	'19545361522': 'Brian Hans',
+	'16505750337': 'Nick Swift'
+}
 
 module.exports = function attachHandlers(router, passport) {
 
@@ -49,6 +55,14 @@ function incomingMessage(req, res, next) {
 		if (chat.chatUser === undefined || chat.chatUser === null) {
 			var chatUser = new ChatUser();
 			chatUser.phoneNumber = from;
+
+			var name = phoneNumberNames[from];
+			if (name) {
+				chatUser.name = name;
+			} else {
+				chatUser.name = from;
+			}
+
 			chat.chatUser = chatUser;
 		}
 
@@ -72,6 +86,7 @@ function createChat(phoneNumber) {
 		var chat = new Chat();
 		chat.owner = user;
 		chat.messages = [];
+		chat.type = Constants.TEXT;
 		return Promise.resolve(chat);
 	});
 }
