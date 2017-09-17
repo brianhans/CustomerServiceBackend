@@ -109,7 +109,7 @@ function sendSms(chatId, message) {
 		var from = chat.owner.phoneNUmber;
 		var to = chat.chatUser.phoneNumber;
 
-		return nexmoCLient.message.sendSms(from, to, message);
+		return nexmo.message.sendSms(from, to, message);
 	});
 }
 
