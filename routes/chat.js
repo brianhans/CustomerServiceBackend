@@ -42,15 +42,25 @@ function getChat(req, res, next) {
 function addMessage(req, res, next) {
 	var id = req.params.id;
 	var text = req.body.text;
+	var fromUser = req.body.fromUser;
 
 	var message = new Message()
+	message.text = text;
+	message.fromUser = req.body.fromUser;
+	var messageSave = message.save();
 
-	Users.findOneAndUpdate({
+	var chatUpdate = Chat.findOneAndUpdate({
 		_id: id
 	}, {
 		$push: {
-			friends: friend
+			messages: message
 		}
+	});
+
+	Promise.all([chatUpdate, messageSave]).then(() => {
+		res.status(200).send(JSON.stringify(message.toObject()));
+	}).catch(err => {
+		next(err);
 	});
 }
 
