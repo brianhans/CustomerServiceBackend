@@ -24,19 +24,19 @@ function createServer() {
 	var port = normalizePort(process.env.PORT || '3000');
 	server.set('port', port);
 
-	//Start socket
-	var httpServer = require('http').Server(server);
-	var io = require('socket.io')(httpServer);
-	console.log(httpServer.port);
-
-	require('./services/socket')(io);
 
 	// attach router handlers
 	require('./routes').attachHandlers(server, passport, io);
 
-	server.listen(port, function() {
+	//Start socket
+	var httpServer = require('http').Server(server);
+	httpServer.listen(port, function() {
 		console.log('now listening on ' + port);
 	});
+	var io = require('socket.io')(httpServer);
+
+	require('./services/socket')(io);
+
 
 	return server;
 }
