@@ -4,7 +4,8 @@ var Schema = mongoose.Schema;
 var messageSchema = new Schema({
 	fromUser: Boolean,
 	text: String,
-	read: Boolean
+	seenByAgent: Boolean,
+	seenByUser: Boolean
 }, {
 	timestamps: true
 });

@@ -75,13 +75,23 @@ function addMessage(req, res, next) {
 
 function readMessage(req, res, next) {
 	var id = req.params.id;
+	var fromUser = req.body.fromUser;
+	var data;
+
+	if (fromUser) {
+		data = {
+			seenByUser: true
+		}
+	} else {
+		data = {
+			seenByAgent: true
+		}
+	}
 
 	Message.findOneAndUpdate({
 		_id: id
 	}, {
-		$set: {
-			read: true
-		}
+		$set: data
 	}).then(message => {
 		res.status(200).send(JSON.stringify(message.toObject()));
 	}).catch(err => {
