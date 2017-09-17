@@ -23,8 +23,10 @@ function incomingMessage(req, res, next) {
 	Chat.findOne({
 		'chatUser.phoneNumber': from
 	}).then(chat => {
+		console.log('got chat');
 		if (!chat) {
 			//If the chat doesn't exist create one
+			console.log('creating chat');
 			return createChat(to);
 		} else {
 			return Promise.resolve(chat);
@@ -48,10 +50,14 @@ function createChat(phoneNumber) {
 	return User.findOne({
 		phoneNumber: phoneNumber
 	}).then(user => {
+		console.log('got user');
 		if (!user) {
+			console.log('no user');
 			const error = new Error('No use owns phone number: ' + phoneNumber);
 			reject(error);
 		}
+
+		console.log('user exists');
 		var chat = new Chat();
 		chat.owner = user;
 		chat.messages = [];

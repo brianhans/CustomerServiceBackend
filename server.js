@@ -13,7 +13,7 @@ function createServer() {
 	server.use(passport.initialize());
 
 	// attach router handlers
-	require('./routes').attachHandlers(server, passport);
+	require('./routes/index').attachHandlers(server, passport);
 
 
 	//Get port from environment and store in Express.
