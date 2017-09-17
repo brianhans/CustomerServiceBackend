@@ -54,6 +54,7 @@ function incomingMessage(req, res, next) {
 			chat.chatUser = chatUser;
 		}
 
+		console.log(chat);
 		return chat.save();
 	}).then(() => {
 		return res.status(200).send();

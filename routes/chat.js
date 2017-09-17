@@ -49,7 +49,7 @@ function addMessage(req, res, next) {
 
 	var message = new Message()
 	message.text = text;
-	message.fromUser = req.body.fromUser;
+	message.fromUser = fromUser;
 	var messageSave = message.save();
 
 	var chatUpdate = Chat.findOneAndUpdate({
@@ -59,11 +59,13 @@ function addMessage(req, res, next) {
 			messages: message
 		},
 		$set: {
-			lastMessage: message
+			lastMessage: message.text
 		}
 	}).then(chat => {
 		if (!fromUser && chat.type == Constants.TEXT) {
 			return sendSms(id, text);
+		} else if (!fromUser && chat.type == Constants.EMAIL) {
+			return sendEmail(id, text);
 		} else {
 			return Promise.resolve();
 		}
@@ -108,7 +110,11 @@ function sendSms(chatId, message) {
 		var to = chat.chatUser.phoneNumber;
 
 		return nexmoCLient.message.sendSms(from, to, message);
-	})
+	});
+}
+
+function sendEmail(chatId, message) {
+
 }
 
 
