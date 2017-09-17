@@ -39,7 +39,11 @@ function incomingMessage(req, res, next) {
 		message.fromUser = true;
 		message.text = req.body.text;
 
-		chat.messages.push(message);
+		if (chat.messages === undefined) {
+			chat.message = [message]
+		} else {
+			chat.messages.push(message);
+		}
 
 		var chatUser = new ChatUser();
 		chatUser.phoneNumber = from;
