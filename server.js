@@ -24,10 +24,6 @@ function createServer() {
 	var port = normalizePort(process.env.PORT || '3000');
 	server.set('port', port);
 
-
-	// attach router handlers
-	require('./routes').attachHandlers(server, passport, io);
-
 	//Start socket
 	var httpServer = require('http').Server(server);
 	httpServer.listen(port, function() {
@@ -37,6 +33,8 @@ function createServer() {
 
 	require('./services/socket')(io);
 
+	// attach router handlers
+	require('./routes').attachHandlers(server, passport, io);
 
 	return server;
 }
