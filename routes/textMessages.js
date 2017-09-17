@@ -24,8 +24,6 @@ function incomingMessage(req, res, next) {
 
 	Chat.findOne({
 		'chatUser.phoneNumber': from
-	}, {
-		'chatUser.$': 1
 	}).then(chat => {
 		if (!chat) {
 			//If the chat doesn't exist create one
@@ -40,7 +38,6 @@ function incomingMessage(req, res, next) {
 		message.text = req.body.text;
 		message.save();
 
-		console.log(chat);
 		if (chat.messages === undefined) {
 			chat.message = [message]
 		} else {
