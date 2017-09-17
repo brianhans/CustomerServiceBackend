@@ -17,7 +17,7 @@ module.exports = function attachHandlers(router, passport) {
 function listChats(req, res, next) {
 	Chat.find({
 
-	}).populate('chatUser').lean().exec((err, chats) => {
+	}).lean().exec((err, chats) => {
 		if (err) {
 			return next(err);
 		}
@@ -30,7 +30,7 @@ function getChat(req, res, next) {
 	var id = req.params.id;
 	Chat.findOne({
 		_id: id
-	}).populate('chatUser messages').lean().exec((err, chats) => {
+	}).populate('messages').lean().exec((err, chats) => {
 		if (err) {
 			return next(err);
 		}
