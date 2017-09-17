@@ -38,6 +38,7 @@ function incomingMessage(req, res, next) {
 		var message = new Message();
 		message.fromUser = true;
 		message.text = req.body.text;
+		message.save();
 
 		if (chat.messages === undefined) {
 			chat.message = [message]
@@ -45,10 +46,12 @@ function incomingMessage(req, res, next) {
 			chat.messages.push(message);
 		}
 
-		var chatUser = new ChatUser();
-		chatUser.phoneNumber = from;
+		if (chat.chatUser === undefined) {
+			var chatUser = new ChatUser();
+			chatUser.phoneNumber = from;
+			chat.chatUser = chatUser;
+		}
 
-		chat.chatUser = chatUser;
 		return chat.save();
 	}).then(() => {
 		return res.status(200).send();
