@@ -2,12 +2,14 @@ const express = require('express');
 const passport = require('passport');
 const database = require('./models');
 const bodyParser = require('body-parser')
+const morgan = require('morgan')
 require('./services/auth')(passport);
 
 function createServer() {
 	var server = express();
 
 	// specify middleware
+	server.use(morgan('dev'));
 	server.use(bodyParser.urlencoded());
 	server.use(bodyParser.json());
 	server.use(handleError);
