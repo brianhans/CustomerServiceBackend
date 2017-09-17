@@ -44,7 +44,9 @@ function incomingMessage(req, res, next) {
 			chat.messages.push(message);
 		}
 
-		if (chat.chatUser === undefined) {
+		chat.lastMessage = message.text;
+
+		if (chat.chatUser === undefined || chat.chatUser === null) {
 			var chatUser = new ChatUser();
 			chatUser.phoneNumber = from;
 			chat.chatUser = chatUser;
