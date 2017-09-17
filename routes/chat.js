@@ -57,6 +57,9 @@ function addMessage(req, res, next) {
 	}, {
 		$push: {
 			messages: message
+		},
+		$set: {
+			lastMessage: message
 		}
 	}).then(chat => {
 		if (!fromUser && chat.type == Constants.TEXT) {
